@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0f172a"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Sierra Shootout"/>
+  <title>2026 Sierra Spring Shootout</title>
+  <style>
+    :root {
+      --bg: #09111f;
+      --card: #111c2e;
+      --card2: #16243a;
+      --text: #eef4ff;
+      --muted: #9fb0c8;
+      --line: #253750;
+      --accent: #f6b84b;
+      --green: #5ee0a0;
+      --red: #ff6b6b;
+      --blue: #70b7ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(112,183,255,.22), transparent 34%),
+        linear-gradient(180deg, #09111f, #0b1220 45%, #050914);
+      color: var(--text);
+      padding-bottom: 96px;
+    }
+    header {
+      padding: max(22px, env(safe-area-inset-top)) 18px 18px;
+      background: linear-gradient(135deg, #0f172a, #1d3557);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+    h1 { margin: 0; font-size: 24px; letter-spacing: .2px; }
+    header p { margin: 5px 0 0; color: var(--muted); font-weight: 700; }
+    main { max-width: 900px; margin: 0 auto; padding: 14px; }
+    .card {
+      background: linear-gradient(180deg, rgba(17,28,46,.98), rgba(14,23,38,.98));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      padding: 15px;
+      margin-bottom: 14px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.25);
+    }
+    .hero {
+      border-color: rgba(246,184,75,.35);
+      background:
+        linear-gradient(180deg, rgba(246,184,75,.12), rgba(17,28,46,.98)),
+        linear-gradient(135deg, rgba(94,224,160,.10), rgba(112,183,255,.06));
+    }
+    h2 { margin: 0 0 12px; font-size: 19px; }
+    h3 { margin: 12px 0 6px; font-size: 15px; color: var(--accent); }
+    label { display: block; margin: 10px 0 5px; color: var(--muted); font-weight: 800; font-size: 13px; }
+    input, select, textarea, button {
+      width: 100%;
+      border-radius: 13px;
+      border: 1px solid var(--line);
+      padding: 12px;
+      font-size: 16px;
+      background: #0b1424;
+      color: var(--text);
+      outline: none;
+    }
+    input[type="file"] { padding: 10px; }
+    button {
+      background: linear-gradient(135deg, #1f8f5f, #2bb879);
+      border: 0;
+      color: white;
+      font-weight: 900;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+    button.secondary { background: #263750; }
+    button.gold { background: linear-gradient(135deg, #b97816, #f6b84b); color: #111827; }
+    button.danger { background: linear-gradient(135deg, #923434, #ff6b6b); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .leader {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .leader:last-child { border-bottom: 0; }
+    .rank {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: #253750; font-weight: 1000;
+    }
+    .leader.first .rank { background: var(--accent); color: #101827; }
+    .leader.first { background: rgba(246,184,75,.08); margin: 0 -8px; padding: 13px 8px; border-radius: 14px; }
+    .score { font-size: 25px; font-weight: 1000; color: var(--green); }
+    .small { color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .pill {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(112,183,255,.14);
+      color: #d9ecff;
+      border: 1px solid rgba(112,183,255,.22);
+      margin: 3px 3px 0 0;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .pill.gold { background: rgba(246,184,75,.16); color: #ffe4aa; border-color: rgba(246,184,75,.35); }
+    .pill.green { background: rgba(94,224,160,.14); color: #c8ffdf; border-color: rgba(94,224,160,.25); }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 10px max(10px, env(safe-area-inset-bottom));
+      background: rgba(5,9,20,.92);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255,255,255,.08);
+      z-index: 20;
+    }
+    .tabs button { margin: 0; padding: 10px 6px; font-size: 12px; background: #18263c; }
+    .tabs button.active { background: var(--accent); color: #111827; }
+    .view { display: none; }
+    .view.active { display: block; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 8px 4px; text-align: left; vertical-align: top; }
+    th { color: var(--muted); }
+    .fishPhoto {
+      width: 54px; height: 54px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line);
+    }
+    .badgeGrid { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); }
+    .badge {
+      background: var(--card2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .badge strong { color: var(--accent); }
+    .mutedBox {
+      background: rgba(255,255,255,.04);
+      border: 1px dashed rgba(255,255,255,.16);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    @media (max-width: 500px) {
+      .row { grid-template-columns: 1fr; }
+      .badgeGrid { grid-template-columns: 1fr; }
+      h1 { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>2026 Sierra Spring Shootout</h1>
+  <p>Eastern Sierra Trout Competition</p>
+</header>
+
+<main>
+  <section id="home" class="view active">
+    <div class="card hero">
+      <h2>Current Leaderboard</h2>
+      <div id="leaderboard"></div>
+    </div>
+    <div class="card">
+      <h2>Biggest Fish</h2>
+      <div id="biggestFish" class="small">No scoring fish yet.</div>
+    </div>
+    <div class="card">
+      <h2>Rules</h2>
+      <p class="small">
+        • Only each angler’s biggest Brown, Rainbow, and Cutthroat count<br>
+        • Fish must be 14"+ to score<br>
+        • 1 point per inch<br>
+        • Crowley Grand Slam: Brown + Rainbow + Cutthroat = +25<br>
+        • Biggest overall fish = +20<br>
+        • Photos encouraged for proof and bragging rights
+      </p>
+    </div>
+  </section>
+
+  <section id="add" class="view">
+    <div class="card">
+      <h2>Add Fish</h2>
+      <label>Angler</label>
+      <input id="angler" placeholder="Alec" autocomplete="name"/>
+
+      <label>Team</label>
+      <input id="team" placeholder="Optional: Team Spoon Lords"/>
+
+      <div class="row">
+        <div>
+          <label>Species</label>
+          <select id="species">
+            <option>Brown</option>
+            <option>Rainbow</option>
+            <option>Cutthroat</option>
+          </select>
+        </div>
+        <div>
+          <label>Length in inches</label>
+          <input id="length" type="number" step="0.25" min="0" placeholder="22.5"/>
+        </div>
+      </div>
+
+      <label>Water</label>
+      <input id="water" placeholder="Crowley, Owens, Bridgeport, etc."/>
+
+      <label>Lure / method</label>
+      <input id="method" placeholder="Spoon, plug, streamer, etc."/>
+
+      <label>Photo</label>
+      <input id="photo" type="file" accept="image/*"/>
+
+      <button onclick="addFish()">Add Fish</button>
+      <p class="small">Tip: this works offline and saves to this phone’s browser.</p>
+    </div>
+  </section>
+
+  <section id="teams" class="view">
+    <div class="card">
+      <h2>Team Standings</h2>
+      <div id="teamboard"></div>
+      <p class="small">Team score is the total of all anglers on that team.</p>
+    </div>
+  </section>
+
+  <section id="entriesView" class="view">
+    <div class="card">
+      <h2>Fish Entries</h2>
+      <table>
+        <thead>
+          <tr><th>Photo</th><th>Fish</th><th>Details</th><th>Scores?</th></tr>
+        </thead>
+        <tbody id="entries"></tbody>
+      </table>
+      <button class="secondary" onclick="exportData()">Copy Backup</button>
+      <button class="secondary" onclick="showImport()">Import Backup</button>
+      <button class="danger" onclick="clearData()">Clear Derby</button>
+    </div>
+    <div id="importBox" class="card" style="display:none;">
+      <h2>Import Backup</h2>
+      <textarea id="importText" rows="8" placeholder="Paste backup JSON here"></textarea>
+      <button onclick="importData()">Import</button>
+    </div>
+  </section>
+
+  <section id="badgesView" class="view">
+    <div class="card">
+      <h2>Trophy Badges</h2>
+      <div id="badges" class="badgeGrid"></div>
+    </div>
+    <div class="card">
+      <h2>Live Sync Option</h2>
+      <div class="mutedBox small">
+        This version is fully offline and saves on one phone. For everyone to share one live leaderboard, host this file online and connect it to Google Sheets using a Google Apps Script web app URL. The app is ready to be modified for that once you have the URL.
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="tabs">
+  <button class="active" onclick="showView('home', this)">Board</button>
+  <button onclick="showView('add', this)">Add</button>
+  <button onclick="showView('teams', this)">Teams</button>
+  <button onclick="showView('entriesView', this)">Entries</button>
+</div>
+
+<script>
+const MIN_SIZE = 14;
+const GRAND_SLAM_BONUS = 25;
+const BIGGEST_FISH_BONUS = 20;
+let fish = JSON.parse(localStorage.getItem("sierraShootoutFish") || "[]");
+
+function save(){ localStorage.setItem("sierraShootoutFish", JSON.stringify(fish)); }
+
+function showView(id, btn){
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
+
+function readPhoto(file){
+  return new Promise((resolve) => {
+    if (!file) return resolve("");
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function addFish(){
+  const angler = document.getElementById("angler").value.trim();
+  const team = document.getElementById("team").value.trim();
+  const species = document.getElementById("species").value;
+  const length = parseFloat(document.getElementById("length").value);
+  const water = document.getElementById("water").value.trim();
+  const method = document.getElementById("method").value.trim();
+  const photoFile = document.getElementById("photo").files[0];
+
+  if(!angler || isNaN(length) || length <= 0){
+    alert("Enter an angler and valid length.");
+    return;
+  }
+
+  const photo = await readPhoto(photoFile);
+
+  fish.push({
+    id: Date.now(),
+    angler, team, species, length, water, method, photo,
+    time: new Date().toISOString()
+  });
+
+  document.getElementById("length").value = "";
+  document.getElementById("photo").value = "";
+  save();
+  render();
+  alert("Fish added.");
+}
+
+function scoringFish(){ return fish.filter(f => f.length >= MIN_SIZE); }
+
+function getBiggestOverall(){
+  const sf = scoringFish();
+  if(!sf.length) return null;
+  return sf.reduce((m,f) => f.length > m.length ? f : m, sf[0]);
+}
+
+function calculateScores(){
+  const anglers = {};
+  const biggest = getBiggestOverall();
+
+  fish.forEach(f => {
+    if(!anglers[f.angler]){
+      anglers[f.angler] = { name:f.angler, team:f.team || "", Brown:0, Rainbow:0, Cutthroat:0, total:0, grandSlam:false, biggestBonus:false, count:0 };
+    }
+    anglers[f.angler].count++;
+    if(!anglers[f.angler].team && f.team) anglers[f.angler].team = f.team;
+    if(f.length >= MIN_SIZE && f.length > anglers[f.angler][f.species]){
+      anglers[f.angler][f.species] = f.length;
+    }
+  });
+
+  Object.values(anglers).forEach(a => {
+    a.total = a.Brown + a.Rainbow + a.Cutthroat;
+    if(a.Brown > 0 && a.Rainbow > 0 && a.Cutthroat > 0){
+      a.grandSlam = true;
+      a.total += GRAND_SLAM_BONUS;
+    }
+    if(biggest && biggest.angler === a.name){
+      a.biggestBonus = true;
+      a.total += BIGGEST_FISH_BONUS;
+    }
+  });
+
+  return Object.values(anglers).sort((a,b) => b.total - a.total);
+}
+
+function renderLeaderboard(){
+  const el = document.getElementById("leaderboard");
+  const scores = calculateScores();
+  if(!scores.length){ el.innerHTML = '<p class="small">No anglers yet.</p>'; return; }
+  el.innerHTML = scores.map((a,i) => `
+    <div class="leader ${i===0 ? "first" : ""}">
+      <div class="rank">${i+1}</div>
+      <div>
+        <strong>${escapeHtml(a.name)}</strong> ${a.team ? `<span class="small">(${escapeHtml(a.team)})</span>` : ""}<br>
+        <span class="pill">Brown ${a.Brown || "-"}</span>
+        <span class="pill">Rainbow ${a.Rainbow || "-"}</span>
+        <span class="pill">Cutthroat ${a.Cutthroat || "-"}</span>
+        ${a.grandSlam ? '<span class="pill gold">🏆 Grand Slam +25</span>' : ''}
+        ${a.biggestBonus ? '<span class="pill green">🐟 Biggest +20</span>' : ''}
+      </div>
+      <div class="score">${formatScore(a.total)}</div>
+    </div>
+  `).join("");
+}
+
+function renderTeamboard(){
+  const el = document.getElementById("teamboard");
+  const scores = calculateScores();
+  const teams = {};
+  scores.forEach(a => {
+    const team = a.team || "No Team";
+    teams[team] = (teams[team] || 0) + a.total;
+  });
+  const rows = Object.entries(teams).sort((a,b) => b[1]-a[1]);
+  if(!rows.length){ el.innerHTML = '<p class="small">No teams yet.</p>'; return; }
+  el.innerHTML = rows.map(([team,total],i) => `
+    <div class="leader ${i===0 ? "first" : ""}">
+      <div class="rank">${i+1}</div>
+      <div><strong>${escapeHtml(team)}</strong></div>
+      <div class="score">${formatScore(total)}</div>
+    </div>
+  `).join("");
+}
+
+function renderBiggest(){
+  const el = document.getElementById("biggestFish");
+  const b = getBiggestOverall();
+  if(!b){ el.textContent = "No scoring fish yet."; return; }
+  el.innerHTML = `${b.photo ? `<img class="fishPhoto" src="${b.photo}" style="vertical-align:middle;margin-right:8px;">` : ""}<strong>${b.length}" ${b.species}</strong> by <strong>${escapeHtml(b.angler)}</strong>${b.water ? " at " + escapeHtml(b.water) : ""}`;
+}
+
+function renderEntries(){
+  const el = document.getElementById("entries");
+  if(!fish.length){ el.innerHTML = '<tr><td colspan="4" class="small">No fish entered.</td></tr>'; return; }
+  el.innerHTML = fish.slice().reverse().map(f => `
+    <tr>
+      <td>${f.photo ? `<img class="fishPhoto" src="${f.photo}">` : ""}</td>
+      <td><strong>${f.length}" ${f.species}</strong><br><span class="small">${escapeHtml(f.angler)}</span></td>
+      <td class="small">${f.team ? "Team: " + escapeHtml(f.team) + "<br>" : ""}${f.water ? escapeHtml(f.water) + "<br>" : ""}${f.method ? escapeHtml(f.method) : ""}</td>
+      <td>${f.length >= MIN_SIZE ? "Yes" : "No"}</td>
+    </tr>
+  `).join("");
+}
+
+function renderBadges(){
+  const el = document.getElementById("badges");
+  const scores = calculateScores();
+  const biggest = getBiggestOverall();
+  const grand = scores.filter(a => a.grandSlam);
+  const brownKing = bestSpecies("Brown");
+  const rainbowKing = bestSpecies("Rainbow");
+  const cuttKing = bestSpecies("Cutthroat");
+
+  el.innerHTML = `
+    ${badge("Overall Leader", scores[0] ? `${scores[0].name} — ${formatScore(scores[0].total)} pts` : "TBD")}
+    ${badge("Biggest Fish", biggest ? `${biggest.angler}: ${biggest.length}&quot; ${biggest.species}` : "TBD")}
+    ${badge("Brown Trout King", brownKing || "TBD")}
+    ${badge("Rainbow Trout King", rainbowKing || "TBD")}
+    ${badge("Cutthroat King", cuttKing || "TBD")}
+    ${badge("Crowley Grand Slam", grand.length ? grand.map(a => a.name).join(", ") : "TBD")}
+  `;
+}
+
+function bestSpecies(species){
+  const sf = scoringFish().filter(f => f.species === species);
+  if(!sf.length) return "";
+  const b = sf.reduce((m,f) => f.length > m.length ? f : m, sf[0]);
+  return `${escapeHtml(b.angler)}: ${b.length}&quot;`;
+}
+
+function badge(title, value){
+  return `<div class="badge"><strong>${title}</strong><br><span class="small">${value}</span></div>`;
+}
+
+function formatScore(n){ return Number.isInteger(n) ? n : n.toFixed(2); }
+
+function exportData(){
+  const data = JSON.stringify(fish, null, 2);
+  navigator.clipboard.writeText(data).then(() => alert("Backup copied. Paste it in group chat or Notes."));
+}
+
+function showImport(){ document.getElementById("importBox").style.display = "block"; }
+
+function importData(){
+  try {
+    const imported = JSON.parse(document.getElementById("importText").value);
+    if(!Array.isArray(imported)) throw new Error();
+    fish = imported;
+    save();
+    render();
+    alert("Backup imported.");
+  } catch(e){
+    alert("That backup format is not valid.");
+  }
+}
+
+function clearData(){
+  if(confirm("Clear all entries on this phone?")){
+    fish = [];
+    save();
+    render();
+  }
+}
+
+function escapeHtml(str){
+  return String(str || "").replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+function render(){
+  renderLeaderboard();
+  renderTeamboard();
+  renderBiggest();
+  renderEntries();
+  renderBadges();
+}
+
+render();
+</script>
+</body>
+</html>
